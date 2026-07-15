@@ -10,6 +10,8 @@ import { AXIS, BREAK, CANVAS_W, GRID_YEARS, LANEPAD, NOW, ROW, laneHeight, packI
 import { Gridlines } from './Gridlines'
 import { Ribbon } from './Ribbon'
 import { Search, type SearchItem } from './Search'
+import { InequalityBand } from './InequalityBand'
+import { ineqYOf } from '../data/inequality'
 
 interface Props {
   selectedId: string | null
@@ -109,6 +111,7 @@ export function GanttView({ selectedId, onSelect }: Props) {
   const [showPhil, setShowPhil] = useState(true)
   const [showLocus, setShowLocus] = useState(true)
   const [showHeg, setShowHeg] = useState(true)
+  const [showIneq, setShowIneq] = useState(true)
   const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(() => new Set())
   const toggleType = (t: string) =>
     setHiddenTypes((prev) => {
@@ -128,6 +131,8 @@ export function GanttView({ selectedId, onSelect }: Props) {
   const SECTION = 36
   const LOCUS = showLocus ? 56 : 0
   const HEG = showHeg ? 56 : 0
+  const INEQ = showIneq ? 132 : 0
+  const INEQ_PAD = 18
   const sum = (ls: LaneModel[]) => ls.reduce((a, l) => a + l.height, 0)
   const artH = showArt ? sum(artLanes) : 0
   const philH = showPhil ? sum(philLanes) : 0
@@ -152,7 +157,7 @@ export function GanttView({ selectedId, onSelect }: Props) {
   })()
   const tierCount = evtLaid.reduce((m, e) => Math.max(m, e.tier + 1), 1)
   const headerH = showEvents ? HEAD_TOP + tierCount * TIER_H + 8 : 0
-  const canvasH = AXIS + LOCUS + HEG + SECTION + lanesH
+  const canvasH = AXIS + LOCUS + HEG + SECTION + lanesH + INEQ
 
   // A selected ribbon segment (locus / hegemony) gets a full-height period demarcation.
   const selRibbon = [...locus, ...hegemony].find((s) => s.label === selectedId) ?? null
@@ -271,6 +276,7 @@ export function GanttView({ selectedId, onSelect }: Props) {
         { on: showPhil, set: setShowPhil, color: '#cbb26b', label: 'Philosophical threads' },
         { on: showLocus, set: setShowLocus, color: '#7fb0c0', label: 'Where meaning lives' },
         { on: showHeg, set: setShowHeg, color: '#c58f6a', label: 'Cultural hegemony' },
+        { on: showIneq, set: setShowIneq, color: '#d8b45a', label: 'Wealth inequality' },
       ].map((t) => (
         <button
           key={t.label}
@@ -373,6 +379,18 @@ export function GanttView({ selectedId, onSelect }: Props) {
             </div>
           )}
         </div>
+        {showIneq && (
+          <div className="ineq-gutter" style={{ height: INEQ }}>
+            <div className="ineq-gtitle">Wealth inequality</div>
+            <div className="ineq-gsub">top 10% share · approx.</div>
+            <span className="ineq-gy" style={{ top: ineqYOf(90, INEQ, INEQ_PAD) }}>
+              90%
+            </span>
+            <span className="ineq-gy" style={{ top: ineqYOf(60, INEQ, INEQ_PAD) }}>
+              60%
+            </span>
+          </div>
+        )}
       </div>
 
       {/* time canvas + sticky event bar */}
@@ -449,6 +467,8 @@ export function GanttView({ selectedId, onSelect }: Props) {
                 </div>
               )}
             </div>
+
+            {showIneq && <InequalityBand height={INEQ} pad={INEQ_PAD} />}
 
             {selRibbon && (
               <div

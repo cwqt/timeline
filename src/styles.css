@@ -123,6 +123,19 @@ body{
 .evt-legend .eli.off .sw{filter:grayscale(1) brightness(.7)}
 .evt-legend .sw{width:16px;height:3px;border-radius:2px;flex:0 0 auto}
 
+/* wealth-inequality band */
+.ineq-band{position:relative;border-top:1px solid var(--line)}
+.ineq-svg{display:block}
+.ineq-ref{stroke:rgba(255,255,255,.06);stroke-width:1}
+.ineq-area{fill:rgba(216,180,90,.13)}
+.ineq-line{fill:none;stroke:#d8b45a;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.ineq-dot{fill:#d8b45a}
+.ineq-gutter{position:relative;border-top:1px solid var(--line);padding:8px 10px 0 4px}
+.ineq-gtitle{font-size:11px;font-weight:700;letter-spacing:.04em;color:#d8b45a;line-height:1.15}
+.ineq-gsub{font-size:9.5px;color:var(--muted);margin-top:2px}
+.ineq-gy{position:absolute;right:8px;transform:translateY(-50%);font-size:9px;color:var(--muted);
+  font-variant-numeric:tabular-nums}
+
 .lane{position:relative;border-bottom:1px solid var(--line)}
 .lane.hide{display:none}
 .lane-bg{position:absolute;inset:0;opacity:.05}
