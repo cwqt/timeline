@@ -41,6 +41,12 @@ export default function App() {
   return (
     <>
       <GanttView selectedId={selectedId} onSelect={select} />
+      <footer className="app-footer">
+        Built by{' '}
+        <a href="https://github.com/cwqt" target="_blank" rel="noopener noreferrer">
+          @cwqt
+        </a>
+      </footer>
       <Drawer selection={selection} onClose={close} />
     </>
   )
