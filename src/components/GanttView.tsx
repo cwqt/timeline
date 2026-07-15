@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Movement, Current, Selection, Group, NodeKind } from '../types'
 import { eras, ERA_KEYS } from '../data/eras'
 import { traditions, TRAD_KEYS, currents } from '../data/philosophy'
@@ -234,6 +234,14 @@ export function GanttView({ selectedId, onSelect }: Props) {
       onPick: () => focusItem({ kind: 'ribbon', groupName: 'Cultural hegemony', color: L.color, item: L }, L.s, 'heg'),
     })),
   ]
+
+  // On cold load with a deep link (#hash), reveal its layer and scroll it into view.
+  useEffect(() => {
+    if (!selectedId) return
+    searchItems.find((it) => it.label === selectedId)?.onPick()
+    // run once on mount; a shared URL should focus the linked item
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>
