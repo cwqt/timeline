@@ -160,6 +160,19 @@ export function GanttView({ selectedId, onSelect }: Props) {
   // Keep the sticky event bar horizontally aligned with the scrolling canvas.
   const scrollRef = useRef<HTMLDivElement>(null)
   const stickyRef = useRef<HTMLDivElement>(null)
+  const stickyBarRef = useRef<HTMLDivElement>(null)
+
+  // Give the sticky events header a background only once it's pinned to the top.
+  const [stuck, setStuck] = useState(false)
+  useEffect(() => {
+    const onScroll = () => {
+      const el = stickyBarRef.current
+      if (el) setStuck(el.getBoundingClientRect().top <= 0)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [showEvents])
   const syncX = () => {
     const sc = scrollRef.current
     const st = stickyRef.current
@@ -296,7 +309,7 @@ export function GanttView({ selectedId, onSelect }: Props) {
       {/* left gutter — labels aligned to lanes */}
       <div className="gutter">
         {showEvents && (
-          <div className="evt-header-gutter" style={{ height: headerH }}>
+          <div className={'evt-header-gutter' + (stuck ? ' stuck' : '')} style={{ height: headerH }}>
             ⚑ Historical events
           </div>
         )}
@@ -365,7 +378,7 @@ export function GanttView({ selectedId, onSelect }: Props) {
       {/* time canvas + sticky event bar */}
       <div className="track">
         {showEvents && (
-          <div className="evt-sticky" style={{ height: headerH }}>
+          <div className={'evt-sticky' + (stuck ? ' stuck' : '')} ref={stickyBarRef} style={{ height: headerH }}>
             <div className="evt-sticky-inner" ref={stickyRef} style={{ width: CANVAS_W, height: headerH }}>
               {evtLaid.map(({ ev, text, tier }) => {
                 const c = eventKinds[ev.type].color

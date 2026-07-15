@@ -46,7 +46,8 @@ body{
 
 /* historical inflection markers */
 .evt-sticky{position:sticky;top:0;z-index:20;overflow:hidden;
-  border-left:1px solid var(--line);border-bottom:1px solid var(--line)}
+  border-left:1px solid var(--line);border-bottom:1px solid var(--line);transition:background .2s}
+.evt-sticky.stuck,.evt-header-gutter.stuck{background:rgba(13,12,17,.92);backdrop-filter:blur(6px)}
 .evt-sticky-inner{position:relative;will-change:transform}
 .evt-header-gutter{position:sticky;top:0;z-index:21;
   display:flex;align-items:flex-end;padding:0 8px 7px 4px;
@@ -136,12 +137,10 @@ body{
 .label-layer{position:absolute;left:0;top:0;right:0}
 .label-layer.art{z-index:1}
 .label-layer.phil{z-index:6;pointer-events:none}
-.label-layer.phil .lane-label{border-bottom:none;align-items:flex-start;
-  font-family:Georgia,serif;font-style:italic}
+.label-layer.phil .lane-label{border-bottom:none;font-family:Georgia,serif;font-style:italic;
+  background:rgba(13,12,17,.97)}
 .label-layer.phil .lane-label .en{font-weight:600}
 .ll-tag{display:inline-flex;flex-direction:column;max-width:100%}
-.label-layer.phil .ll-tag{background:rgba(12,11,16,.95);padding:3px 9px;border-radius:6px;
-  box-shadow:0 1px 5px rgba(0,0,0,.55)}
 .label-layer.art .lane-label{text-shadow:0 1px 6px rgba(13,12,17,.95),0 0 2px rgba(13,12,17,.8)}
 .gutter .lane-label{display:flex;flex-direction:column;justify-content:center;
   padding:0 10px 0 4px;border-bottom:1px solid var(--line);overflow:hidden}
