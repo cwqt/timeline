@@ -346,6 +346,53 @@ export const currents: Current[] = [
   },
   {
     "trad": "social",
+    "school": "Eugenics",
+    "s": 1883,
+    "e": 1945,
+    "one": "The pseudo-scientific project of 'improving' the human stock by controlling heredity — Darwinism twisted into social policy.",
+    "ideas": [
+      "Heredity as social destiny",
+      "Selective breeding & sterilisation",
+      "Biometrics & the 'normal' (Galton, Pearson)",
+      "Race science & 'degeneration'"
+    ],
+    "thinkers": [
+      "Francis Galton",
+      "Herbert Spencer",
+      "Karl Pearson",
+      "Charles Davenport"
+    ],
+    "ties": [
+      "Positivism",
+      "Decadence",
+      "Nazism"
+    ]
+  },
+  {
+    "trad": "social",
+    "school": "Nazism",
+    "s": 1920,
+    "e": 1945,
+    "one": "A genocidal ideology of racial supremacy, blood-and-soil nationalism, and total state — the catastrophe modern reason failed to prevent.",
+    "ideas": [
+      "Racial 'science' & antisemitism",
+      "Volk, blood & soil",
+      "The total, führer state",
+      "War on 'degenerate' modern art"
+    ],
+    "thinkers": [
+      "Adolf Hitler",
+      "Alfred Rosenberg",
+      "Houston Stewart Chamberlain"
+    ],
+    "ties": [
+      "Eugenics",
+      "Bauhaus",
+      "Critical Theory"
+    ]
+  },
+  {
+    "trad": "social",
     "school": "Marxism",
     "s": 1848,
     "e": 1920,

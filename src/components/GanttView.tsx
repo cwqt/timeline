@@ -9,6 +9,7 @@ import { hegemony } from '../data/hegemony'
 import { AXIS, BREAK, CANVAS_W, GRID_YEARS, LANEPAD, NOW, ROW, laneHeight, packItems, wOf, xOf } from '../lib/layout'
 import { Gridlines } from './Gridlines'
 import { Ribbon } from './Ribbon'
+import { Search, type SearchItem } from './Search'
 
 interface Props {
   selectedId: string | null
@@ -165,8 +166,82 @@ export function GanttView({ selectedId, onSelect }: Props) {
     if (sc && st) st.style.transform = `translateX(${-sc.scrollLeft}px)`
   }
 
+  // Select an item, reveal whatever layer it lives on, and scroll it into view.
+  type Layer = 'art' | 'phil' | 'event' | 'locus' | 'heg'
+  const focusItem = (sel: Selection, year: number, layer: Layer, evType?: string) => {
+    if (layer === 'art') setShowArt(true)
+    else if (layer === 'phil') setShowPhil(true)
+    else if (layer === 'locus') setShowLocus(true)
+    else if (layer === 'heg') setShowHeg(true)
+    else if (layer === 'event') {
+      setShowEvents(true)
+      if (evType)
+        setHiddenTypes((prev) => {
+          const next = new Set(prev)
+          next.delete(evType)
+          return next
+        })
+    }
+    onSelect(sel)
+    scrollRef.current?.scrollTo({ left: Math.max(0, xOf(year) - 160), behavior: 'smooth' })
+  }
+
+  const searchItems: SearchItem[] = [
+    ...movements.map((m) => ({
+      key: 'm:' + m.name,
+      label: m.name,
+      sub: eras[m.era].name,
+      color: eras[m.era].color,
+      terms: [m.name, ...m.figs, ...m.ideas],
+      onPick: () =>
+        focusItem({ kind: 'art', groupName: eras[m.era].name, color: eras[m.era].color, item: m }, m.s, 'art'),
+    })),
+    ...currents.map((c) => ({
+      key: 'c:' + c.school,
+      label: c.school,
+      sub: traditions[c.trad].name,
+      color: traditions[c.trad].color,
+      terms: [c.school, ...c.thinkers, ...c.ideas],
+      onPick: () =>
+        focusItem(
+          { kind: 'phil', groupName: traditions[c.trad].name, color: traditions[c.trad].color, item: c },
+          c.s,
+          'phil',
+        ),
+    })),
+    ...events.map((ev) => ({
+      key: 'e:' + ev.label,
+      label: ev.label,
+      sub: eventKinds[ev.type].label,
+      color: eventKinds[ev.type].color,
+      terms: [ev.label],
+      onPick: () => focusItem({ kind: 'event', color: eventKinds[ev.type].color, item: ev }, ev.year, 'event', ev.type),
+    })),
+    ...locus.map((L) => ({
+      key: 'l:' + L.label,
+      label: L.label,
+      sub: 'Where meaning lives',
+      color: L.color,
+      terms: [L.label, L.gloss],
+      onPick: () => focusItem({ kind: 'ribbon', groupName: 'Where meaning lives', color: L.color, item: L }, L.s, 'locus'),
+    })),
+    ...hegemony.map((L) => ({
+      key: 'h:' + L.label,
+      label: L.label,
+      sub: 'Cultural hegemony',
+      color: L.color,
+      terms: [L.label, L.gloss],
+      onPick: () => focusItem({ kind: 'ribbon', groupName: 'Cultural hegemony', color: L.color, item: L }, L.s, 'heg'),
+    })),
+  ]
+
   return (
     <>
+    <header className="app-header">
+      <span className="app-mark" />
+      <span className="app-title">Timeline</span>
+      <Search items={searchItems} />
+    </header>
     <div className="layer-toggles">
       <span className="lt-label">Show</span>
       {[

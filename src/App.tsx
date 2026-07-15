@@ -2,16 +2,32 @@ import { useEffect, useState } from 'react'
 import { GanttView } from './components/GanttView'
 import { Drawer } from './components/Drawer'
 import type { Selection } from './types'
+import { hashToSelection, selectionToHash } from './lib/permalink'
 
 export default function App() {
-  const [selection, setSelection] = useState<Selection | null>(null)
+  const [selection, setSelection] = useState<Selection | null>(() => hashToSelection(window.location.hash))
+
+  const select = (sel: Selection) => {
+    const h = selectionToHash(sel)
+    if (h) window.location.hash = h // fires hashchange → updates selection
+    else setSelection(sel)
+  }
+  const close = () => {
+    if (window.location.hash) history.replaceState(null, '', window.location.pathname + window.location.search)
+    setSelection(null)
+  }
 
   useEffect(() => {
+    const apply = () => setSelection(hashToSelection(window.location.hash))
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setSelection(null)
+      if (e.key === 'Escape') close()
     }
+    window.addEventListener('hashchange', apply)
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('hashchange', apply)
+      window.removeEventListener('keydown', onKey)
+    }
   }, [])
 
   const selectedId = selection
@@ -24,12 +40,8 @@ export default function App() {
 
   return (
     <>
-      <header className="app-header">
-        <span className="app-mark" />
-        <span className="app-title">Timeline</span>
-      </header>
-      <GanttView selectedId={selectedId} onSelect={setSelection} />
-      <Drawer selection={selection} onClose={() => setSelection(null)} />
+      <GanttView selectedId={selectedId} onSelect={select} />
+      <Drawer selection={selection} onClose={close} />
     </>
   )
 }
