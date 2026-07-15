@@ -4,7 +4,7 @@ import type { LocusSeg } from '../types'
  *  and defines legitimate culture, and how that authority passes hands. */
 export const hegemony: LocusSeg[] = [
   {
-    label: 'THE CHURCH',
+    label: 'The Church',
     s: 1385,
     e: 1650,
     color: '#c29a45',
@@ -13,7 +13,7 @@ export const hegemony: LocusSeg[] = [
       'For centuries the Roman Catholic Church was the supreme patron and censor of Western culture. It commissioned the altarpiece and the fresco, defined orthodoxy and heresy, and made the sacred image the central task of art — a monopoly cracked only by the printing press, the Reformation, and the new science.',
   },
   {
-    label: 'THE CROWN & COURT',
+    label: 'The Crown & Court',
     s: 1650,
     e: 1789,
     color: '#8a7bc0',
@@ -22,7 +22,7 @@ export const hegemony: LocusSeg[] = [
       'After the wars of religion, absolutist monarchs and their courts became the arbiters of taste. Royal academies set the rules, Versailles staged power as spectacle, and aristocratic patronage decided what counted as art — until the French Revolution swept the old order away.',
   },
   {
-    label: 'THE BOURGEOIS STATE',
+    label: 'The Bourgeois State',
     s: 1789,
     e: 1900,
     color: '#7e9ba6',
@@ -31,7 +31,7 @@ export const hegemony: LocusSeg[] = [
       'The nineteenth century handed cultural authority to the nation-state and the rising middle class. The public museum, the official Salon, and the academy defined legitimacy, while the bourgeoisie became the new patron — and the target of avant-garde revolt.',
   },
   {
-    label: 'THE MARKET & MEDIA',
+    label: 'The Market & Media',
     s: 1900,
     e: 2000,
     color: '#5fb09a',
@@ -40,7 +40,7 @@ export const hegemony: LocusSeg[] = [
       'In the twentieth century, dealers, galleries, critics, and museums — and increasingly mass media — set value. The dealer-critic system replaced the Salon; the culture industry, as Adorno named it, turned art and entertainment into commodities produced at scale.',
   },
   {
-    label: 'THE PLATFORM',
+    label: 'The Platform',
     s: 2000,
     e: 2032,
     color: '#e06fae',

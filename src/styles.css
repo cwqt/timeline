@@ -268,7 +268,7 @@ footer{max-width:760px;margin:44px auto 0;text-align:center;color:var(--muted);f
   cursor:pointer;transition:filter .14s,box-shadow .14s}
 .locus-seg:hover{filter:brightness(1.4)}
 .locus-seg.sel{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55)}
-.locus-seg .ll{font-size:12px;font-weight:800;letter-spacing:.13em}
+.locus-seg .ll{font-size:12px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
 .locus-seg .lg{font-size:10.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .locus-seg .arr{position:absolute;right:-7px;top:50%;transform:translateY(-50%);color:#8a8496;font-size:15px;z-index:2}
 .locus-gutter{height:56px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;padding-left:4px}
