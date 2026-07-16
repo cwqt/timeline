@@ -133,10 +133,11 @@ export function GanttView({ selectedId, onSelect }: Props) {
   )
 
   const SECTION = 36
-  const EPOCH = showEpoch ? 34 : 0 // compact: title only (must match .locus-band.compact height)
-  const LOCUS = showLocus ? 56 : 0
-  const HEG = showHeg ? 56 : 0
-  const PROD = showProd ? 56 : 0
+  // compact ribbons: title only (must match .locus-band.compact height)
+  const EPOCH = showEpoch ? 34 : 0
+  const LOCUS = showLocus ? 34 : 0
+  const HEG = showHeg ? 34 : 0
+  const PROD = showProd ? 34 : 0
   const INEQ = showIneq ? 132 : 0
   const INEQ_PAD = 18
   const sum = (ls: LaneModel[]) => ls.reduce((a, l) => a + l.height, 0)
@@ -353,33 +354,18 @@ export function GanttView({ selectedId, onSelect }: Props) {
           </div>
         )}
         {showLocus && (
-          <div className="locus-gutter">
-            <span className="a">
-              Where meaning
-              <br />
-              lives
-            </span>
-            <span className="b">the through-line</span>
+          <div className="locus-gutter compact" style={{ height: LOCUS }}>
+            <span className="a">Where meaning lives</span>
           </div>
         )}
         {showHeg && (
-          <div className="locus-gutter">
-            <span className="a">
-              Cultural
-              <br />
-              hegemony
-            </span>
-            <span className="b">who holds the centre</span>
+          <div className="locus-gutter compact" style={{ height: HEG }}>
+            <span className="a">Cultural hegemony</span>
           </div>
         )}
         {showProd && (
-          <div className="locus-gutter">
-            <span className="a">
-              Modes of
-              <br />
-              production
-            </span>
-            <span className="b">how wealth is made</span>
+          <div className="locus-gutter compact" style={{ height: PROD }}>
+            <span className="a">Modes of production</span>
           </div>
         )}
         <div className="section-gutter">
@@ -487,13 +473,13 @@ export function GanttView({ selectedId, onSelect }: Props) {
               <Ribbon segments={epoch} title="Historical epoch" compact selectedId={selectedId} onSelect={onSelect} />
             )}
             {showLocus && (
-              <Ribbon segments={locus} title="Where meaning lives" selectedId={selectedId} onSelect={onSelect} />
+              <Ribbon segments={locus} title="Where meaning lives" compact selectedId={selectedId} onSelect={onSelect} />
             )}
             {showHeg && (
-              <Ribbon segments={hegemony} title="Cultural hegemony" selectedId={selectedId} onSelect={onSelect} />
+              <Ribbon segments={hegemony} title="Cultural hegemony" compact selectedId={selectedId} onSelect={onSelect} />
             )}
             {showProd && (
-              <Ribbon segments={production} title="Modes of production" selectedId={selectedId} onSelect={onSelect} />
+              <Ribbon segments={production} title="Modes of production" compact selectedId={selectedId} onSelect={onSelect} />
             )}
 
             <div className="section-band" style={{ width: CANVAS_W }}>
