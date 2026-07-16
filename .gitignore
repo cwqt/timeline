@@ -6,3 +6,6 @@ dist-ssr
 .vite
 
 *.tsbuildinfo
+
+# Local Netlify folder
+.netlify

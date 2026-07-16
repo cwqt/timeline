@@ -5,6 +5,7 @@ import { traditions, currents } from '../data/philosophy'
 import { events, eventKinds } from '../data/events'
 import { locus } from '../data/locus'
 import { hegemony } from '../data/hegemony'
+import { production } from '../data/production'
 
 /** Serialize a drawer selection into a shareable location hash (e.g. "#art=Cubism"). */
 export function selectionToHash(sel: Selection): string {
@@ -13,7 +14,12 @@ export function selectionToHash(sel: Selection): string {
   if (sel.kind === 'phil') return 'phil=' + encodeURIComponent((item as Current).school)
   if (sel.kind === 'event') return 'event=' + encodeURIComponent((item as HistEvent).label)
   if (sel.kind === 'ribbon') {
-    const key = sel.groupName === 'Cultural hegemony' ? 'hegemony' : 'meaning'
+    const key =
+      sel.groupName === 'Cultural hegemony'
+        ? 'hegemony'
+        : sel.groupName === 'Modes of production'
+          ? 'production'
+          : 'meaning'
     return key + '=' + encodeURIComponent((item as LocusSeg).label)
   }
   return ''
@@ -42,6 +48,9 @@ export function hashToSelection(hash: string): Selection | null {
   } else if (kind === 'hegemony') {
     const L = hegemony.find((x) => x.label === val)
     if (L) return { kind: 'ribbon', groupName: 'Cultural hegemony', color: L.color, item: L }
+  } else if (kind === 'production') {
+    const L = production.find((x) => x.label === val)
+    if (L) return { kind: 'ribbon', groupName: 'Modes of production', color: L.color, item: L }
   }
   return null
 }

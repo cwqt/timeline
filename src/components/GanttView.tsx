@@ -6,6 +6,7 @@ import { movements } from '../data/movements'
 import { events, eventKinds } from '../data/events'
 import { locus } from '../data/locus'
 import { hegemony } from '../data/hegemony'
+import { production } from '../data/production'
 import { AXIS, BREAK, CANVAS_W, GRID_YEARS, LANEPAD, NOW, ROW, laneHeight, packItems, wOf, xOf } from '../lib/layout'
 import { Gridlines } from './Gridlines'
 import { Ribbon } from './Ribbon'
@@ -111,6 +112,7 @@ export function GanttView({ selectedId, onSelect }: Props) {
   const [showPhil, setShowPhil] = useState(true)
   const [showLocus, setShowLocus] = useState(true)
   const [showHeg, setShowHeg] = useState(true)
+  const [showProd, setShowProd] = useState(true)
   const [showIneq, setShowIneq] = useState(true)
   const [hiddenTypes, setHiddenTypes] = useState<Set<string>>(() => new Set())
   const toggleType = (t: string) =>
@@ -131,6 +133,7 @@ export function GanttView({ selectedId, onSelect }: Props) {
   const SECTION = 36
   const LOCUS = showLocus ? 56 : 0
   const HEG = showHeg ? 56 : 0
+  const PROD = showProd ? 56 : 0
   const INEQ = showIneq ? 132 : 0
   const INEQ_PAD = 18
   const sum = (ls: LaneModel[]) => ls.reduce((a, l) => a + l.height, 0)
@@ -157,10 +160,10 @@ export function GanttView({ selectedId, onSelect }: Props) {
   })()
   const tierCount = evtLaid.reduce((m, e) => Math.max(m, e.tier + 1), 1)
   const headerH = showEvents ? HEAD_TOP + tierCount * TIER_H + 8 : 0
-  const canvasH = AXIS + LOCUS + HEG + SECTION + lanesH + INEQ
+  const canvasH = AXIS + LOCUS + HEG + PROD + SECTION + lanesH + INEQ
 
   // A selected ribbon segment (locus / hegemony) gets a full-height period demarcation.
-  const selRibbon = [...locus, ...hegemony].find((s) => s.label === selectedId) ?? null
+  const selRibbon = [...locus, ...hegemony, ...production].find((s) => s.label === selectedId) ?? null
 
   // Keep the sticky event bar horizontally aligned with the scrolling canvas.
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -185,12 +188,13 @@ export function GanttView({ selectedId, onSelect }: Props) {
   }
 
   // Select an item, reveal whatever layer it lives on, and scroll it into view.
-  type Layer = 'art' | 'phil' | 'event' | 'locus' | 'heg'
+  type Layer = 'art' | 'phil' | 'event' | 'locus' | 'heg' | 'prod'
   const focusItem = (sel: Selection, year: number, layer: Layer, evType?: string) => {
     if (layer === 'art') setShowArt(true)
     else if (layer === 'phil') setShowPhil(true)
     else if (layer === 'locus') setShowLocus(true)
     else if (layer === 'heg') setShowHeg(true)
+    else if (layer === 'prod') setShowProd(true)
     else if (layer === 'event') {
       setShowEvents(true)
       if (evType)
@@ -251,6 +255,15 @@ export function GanttView({ selectedId, onSelect }: Props) {
       terms: [L.label, L.gloss],
       onPick: () => focusItem({ kind: 'ribbon', groupName: 'Cultural hegemony', color: L.color, item: L }, L.s, 'heg'),
     })),
+    ...production.map((L) => ({
+      key: 'p:' + L.label,
+      label: L.label,
+      sub: 'Modes of production',
+      color: L.color,
+      terms: [L.label, L.gloss],
+      onPick: () =>
+        focusItem({ kind: 'ribbon', groupName: 'Modes of production', color: L.color, item: L }, L.s, 'prod'),
+    })),
   ]
 
   // On cold load with a deep link (#hash), reveal its layer and scroll it into view.
@@ -276,6 +289,7 @@ export function GanttView({ selectedId, onSelect }: Props) {
         { on: showPhil, set: setShowPhil, color: '#cbb26b', label: 'Philosophical threads' },
         { on: showLocus, set: setShowLocus, color: '#7fb0c0', label: 'Where meaning lives' },
         { on: showHeg, set: setShowHeg, color: '#c58f6a', label: 'Cultural hegemony' },
+        { on: showProd, set: setShowProd, color: '#b5894a', label: 'Modes of production' },
         { on: showIneq, set: setShowIneq, color: '#d8b45a', label: 'Wealth inequality' },
       ].map((t) => (
         <button
@@ -338,6 +352,16 @@ export function GanttView({ selectedId, onSelect }: Props) {
               hegemony
             </span>
             <span className="b">who holds the centre</span>
+          </div>
+        )}
+        {showProd && (
+          <div className="locus-gutter">
+            <span className="a">
+              Modes of
+              <br />
+              production
+            </span>
+            <span className="b">how wealth is made</span>
           </div>
         )}
         <div className="section-gutter">
@@ -446,6 +470,9 @@ export function GanttView({ selectedId, onSelect }: Props) {
             )}
             {showHeg && (
               <Ribbon segments={hegemony} title="Cultural hegemony" selectedId={selectedId} onSelect={onSelect} />
+            )}
+            {showProd && (
+              <Ribbon segments={production} title="Modes of production" selectedId={selectedId} onSelect={onSelect} />
             )}
 
             <div className="section-band" style={{ width: CANVAS_W }}>
