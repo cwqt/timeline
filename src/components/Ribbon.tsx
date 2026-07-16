@@ -7,12 +7,14 @@ interface Props {
   title: string
   selectedId: string | null
   onSelect: (s: Selection) => void
+  /** Compact = a shorter band showing only the segment title (no gloss). */
+  compact?: boolean
 }
 
 /** A labelled context band under the axis — a sequence of segments that hand off across time. */
-export function Ribbon({ segments, title, selectedId, onSelect }: Props) {
+export function Ribbon({ segments, title, selectedId, onSelect, compact }: Props) {
   return (
-    <div className="locus-band" style={{ width: CANVAS_W }}>
+    <div className={'locus-band' + (compact ? ' compact' : '')} style={{ width: CANVAS_W }}>
       <Gridlines />
       {segments.map((L, i) => (
         <div
@@ -28,7 +30,7 @@ export function Ribbon({ segments, title, selectedId, onSelect }: Props) {
           <span className="ll" style={{ color: L.color }}>
             {L.label}
           </span>
-          <span className="lg">{L.gloss}</span>
+          {!compact && <span className="lg">{L.gloss}</span>}
           {i < segments.length - 1 && <span className="arr">→</span>}
         </div>
       ))}

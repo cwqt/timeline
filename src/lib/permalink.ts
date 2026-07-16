@@ -3,6 +3,7 @@ import { movements } from '../data/movements'
 import { eras } from '../data/eras'
 import { traditions, currents } from '../data/philosophy'
 import { events, eventKinds } from '../data/events'
+import { epoch } from '../data/epoch'
 import { locus } from '../data/locus'
 import { hegemony } from '../data/hegemony'
 import { production } from '../data/production'
@@ -19,7 +20,9 @@ export function selectionToHash(sel: Selection): string {
         ? 'hegemony'
         : sel.groupName === 'Modes of production'
           ? 'production'
-          : 'meaning'
+          : sel.groupName === 'Historical epoch'
+            ? 'epoch'
+            : 'meaning'
     return key + '=' + encodeURIComponent((item as LocusSeg).label)
   }
   return ''
@@ -51,6 +54,9 @@ export function hashToSelection(hash: string): Selection | null {
   } else if (kind === 'production') {
     const L = production.find((x) => x.label === val)
     if (L) return { kind: 'ribbon', groupName: 'Modes of production', color: L.color, item: L }
+  } else if (kind === 'epoch') {
+    const L = epoch.find((x) => x.label === val)
+    if (L) return { kind: 'ribbon', groupName: 'Historical epoch', color: L.color, item: L }
   }
   return null
 }

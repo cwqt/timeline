@@ -4,6 +4,7 @@ import { eras, ERA_KEYS } from '../data/eras'
 import { traditions, TRAD_KEYS, currents } from '../data/philosophy'
 import { movements } from '../data/movements'
 import { events, eventKinds } from '../data/events'
+import { epoch } from '../data/epoch'
 import { locus } from '../data/locus'
 import { hegemony } from '../data/hegemony'
 import { production } from '../data/production'
@@ -110,6 +111,7 @@ export function GanttView({ selectedId, onSelect }: Props) {
   const [showEvents, setShowEvents] = useState(true)
   const [showArt, setShowArt] = useState(true)
   const [showPhil, setShowPhil] = useState(true)
+  const [showEpoch, setShowEpoch] = useState(true)
   const [showLocus, setShowLocus] = useState(true)
   const [showHeg, setShowHeg] = useState(true)
   const [showProd, setShowProd] = useState(true)
@@ -131,6 +133,7 @@ export function GanttView({ selectedId, onSelect }: Props) {
   )
 
   const SECTION = 36
+  const EPOCH = showEpoch ? 34 : 0 // compact: title only (must match .locus-band.compact height)
   const LOCUS = showLocus ? 56 : 0
   const HEG = showHeg ? 56 : 0
   const PROD = showProd ? 56 : 0
@@ -160,10 +163,10 @@ export function GanttView({ selectedId, onSelect }: Props) {
   })()
   const tierCount = evtLaid.reduce((m, e) => Math.max(m, e.tier + 1), 1)
   const headerH = showEvents ? HEAD_TOP + tierCount * TIER_H + 8 : 0
-  const canvasH = AXIS + LOCUS + HEG + PROD + SECTION + lanesH + INEQ
+  const canvasH = AXIS + EPOCH + LOCUS + HEG + PROD + SECTION + lanesH + INEQ
 
   // A selected ribbon segment (locus / hegemony) gets a full-height period demarcation.
-  const selRibbon = [...locus, ...hegemony, ...production].find((s) => s.label === selectedId) ?? null
+  const selRibbon = [...epoch, ...locus, ...hegemony, ...production].find((s) => s.label === selectedId) ?? null
 
   // Keep the sticky event bar horizontally aligned with the scrolling canvas.
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -188,10 +191,11 @@ export function GanttView({ selectedId, onSelect }: Props) {
   }
 
   // Select an item, reveal whatever layer it lives on, and scroll it into view.
-  type Layer = 'art' | 'phil' | 'event' | 'locus' | 'heg' | 'prod'
+  type Layer = 'art' | 'phil' | 'event' | 'locus' | 'heg' | 'prod' | 'epoch'
   const focusItem = (sel: Selection, year: number, layer: Layer, evType?: string) => {
     if (layer === 'art') setShowArt(true)
     else if (layer === 'phil') setShowPhil(true)
+    else if (layer === 'epoch') setShowEpoch(true)
     else if (layer === 'locus') setShowLocus(true)
     else if (layer === 'heg') setShowHeg(true)
     else if (layer === 'prod') setShowProd(true)
@@ -238,6 +242,14 @@ export function GanttView({ selectedId, onSelect }: Props) {
       color: eventKinds[ev.type].color,
       terms: [ev.label],
       onPick: () => focusItem({ kind: 'event', color: eventKinds[ev.type].color, item: ev }, ev.year, 'event', ev.type),
+    })),
+    ...epoch.map((L) => ({
+      key: 'ep:' + L.label,
+      label: L.label,
+      sub: 'Historical epoch',
+      color: L.color,
+      terms: [L.label, L.gloss],
+      onPick: () => focusItem({ kind: 'ribbon', groupName: 'Historical epoch', color: L.color, item: L }, L.s, 'epoch'),
     })),
     ...locus.map((L) => ({
       key: 'l:' + L.label,
@@ -287,6 +299,7 @@ export function GanttView({ selectedId, onSelect }: Props) {
         { on: showEvents, set: setShowEvents, color: '#e0483a', label: 'Historical events' },
         { on: showArt, set: setShowArt, color: '#c9b8e6', label: 'Artistic movements' },
         { on: showPhil, set: setShowPhil, color: '#cbb26b', label: 'Philosophical threads' },
+        { on: showEpoch, set: setShowEpoch, color: '#9a8f7a', label: 'Historical epoch' },
         { on: showLocus, set: setShowLocus, color: '#7fb0c0', label: 'Where meaning lives' },
         { on: showHeg, set: setShowHeg, color: '#c58f6a', label: 'Cultural hegemony' },
         { on: showProd, set: setShowProd, color: '#b5894a', label: 'Modes of production' },
@@ -334,6 +347,11 @@ export function GanttView({ selectedId, onSelect }: Props) {
           </div>
         )}
         <div style={{ height: AXIS, borderBottom: '1px solid var(--line)' }} />
+        {showEpoch && (
+          <div className="locus-gutter compact" style={{ height: EPOCH }}>
+            <span className="a">Historical epoch</span>
+          </div>
+        )}
         {showLocus && (
           <div className="locus-gutter">
             <span className="a">
@@ -465,6 +483,9 @@ export function GanttView({ selectedId, onSelect }: Props) {
               </div>
             </div>
 
+            {showEpoch && (
+              <Ribbon segments={epoch} title="Historical epoch" compact selectedId={selectedId} onSelect={onSelect} />
+            )}
             {showLocus && (
               <Ribbon segments={locus} title="Where meaning lives" selectedId={selectedId} onSelect={onSelect} />
             )}
